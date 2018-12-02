@@ -1,17 +1,38 @@
-const fileLoader = require('./file-loader.js');
-const inputRaw = fileLoader.openFile('../day_2_input.txt');
-const inputArr = cleanInput(inputRaw);
+function run() {
+    const fileLoader = require('./file-loader.js');
+    const inputRaw = fileLoader.openFile('../day_2_input.txt');
+    const inputArr = cleanInput(inputRaw);
 
-const inputMatches = findMatches(inputArr);
-const inputChecksum = makeChecksum(inputMatches);
-console.log(inputChecksum);
+    const inputMatches = findMatches(inputArr);
+    const inputChecksum = makeChecksum(inputMatches);
+    console.log(`Answer to Part 1: ${inputChecksum}`);
+
+    const secondHash = findSimilarHashes(inputArr);
+    const overlapLetters = findSameChars(secondHash);
+    console.log(`Answer to Part 2: ${overlapLetters.join('')}`);
+}
+
+function test() {
+    const assert = require('assert');
+    try {
+        const testInput1 = 'abcdef\nbababc\nabbcde\nabcccd\naabcdd\nabcdee\nababab\n';
+        const test1Arr = cleanInput(testInput1);
+        const matchesResult = findMatches(test1Arr);
+        const checksumResult = makeChecksum(matchesResult);
+        assert.strictEqual(checksumResult, 12);
 
 
-// const testInput = 'abcdef\nbababc\nabbcde\nabcccd\naabcdd\nabcdee\nababab\n';
-// const testArr = cleanInput(testInput);
-// const matchesResult = findMatches(testArr);
-// const checksumResult = makeChecksum(matchesResult);
-// console.log(`${checksumResult} is equal to 12`);
+        const testInput2 = 'abcde\nfghij\nklmno\npqrst\nfguij\naxcye\nwvxyz';
+        const test2Arr = cleanInput(testInput2);
+        const testHash = findSimilarHashes(test2Arr);
+        const overlapLetters = findSameChars(testHash);
+        assert.strictEqual(overlapLetters.join(''), 'fgij');
+        console.log('All Tests Passed');
+    } catch (e) {
+        console.log(e);
+    }
+}
+
 
 function findMatches(inputArr) {
     let result = {
@@ -40,33 +61,20 @@ function makeChecksum(resultObj) {
     return resultObj.hasTwo.length * resultObj.hasThree.length;
 }
 
-/*
-test Values
-const testInput = 'abcde\nfghij\nklmno\npqrst\nfguij\naxcye\nwvxyz';
-const testArr = cleanInput(testInput);
-const testHash = findSimilarHashes(testArr);
-const overlapLetters = findSameChars(testHash);
-console.log(overlapLetters);
-*/
+
 
 /* Part 2 */
-const secondHash = findSimilarHashes(inputArr);
-const overlapLetters = findSameChars(secondHash);
-console.log(overlapLetters.join(''));
+
 
 function findSimilarHashes(hashArr) {
     let matchObj = { firstValue: -1, secondValue: -1 };
     for (let i = 0; i < hashArr.length; i++) {
-        console.log(i);
         const mainHash = hashArr[i];
         for (let j = i; j < hashArr.length; j++) {
             if (compareStrings(mainHash, hashArr[j]) === mainHash.length - 1) {
-                console.log('we got one!', mainHash, hashArr[j]);
                 matchObj.firstValue = mainHash;
                 matchObj.secondValue = hashArr[j];
                 break;
-            } else {
-                console.log(mainHash, hashArr[j]);
             }
         }
         if (matchObj.firstValue !== -1) {
@@ -93,7 +101,6 @@ function compareStrings(first, second) {
 
 function findSameChars(matchObj) {
     let matchedLetters = [];
-    console.log(matchObj)
     matchObj.firstValue.split('').forEach((char, idx) => {
         if (char === matchObj.secondValue[idx]) {
             matchedLetters.push(char);
@@ -105,4 +112,9 @@ function findSameChars(matchObj) {
 
 function cleanInput(text) {
     return text.split('\n').filter(i => i !== '');
-} 
+}
+
+module.exports = {
+    run,
+    test
+}
