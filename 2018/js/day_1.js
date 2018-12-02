@@ -1,10 +1,6 @@
-const fs = require('fs');
-const path = require('path');
-const inputPath = path.join(__dirname, '../day_1_input.txt');
-const inputRaw = fs.readFileSync(inputPath, 'utf8');
-
+const fileLoader = require('./file-loader.js');
+inputRaw = fileLoader.openFile('../day_1_input.txt');
 const inputArray = cleanInput(inputRaw);
-
 
 function sum(arr) {
     const reducer = (collector, current) => collector + current;
