@@ -32,7 +32,6 @@ function findMatches(inputArr) {
             }
         });
     });
-    console.log(`2: ${result.hasTwo}, 3: ${result.hasThree}`);
 
     return result;
 }
@@ -41,17 +40,69 @@ function makeChecksum(resultObj) {
     return resultObj.hasTwo.length * resultObj.hasThree.length;
 }
 
-// console.log();
+/*
+test Values
+const testInput = 'abcde\nfghij\nklmno\npqrst\nfguij\naxcye\nwvxyz';
+const testArr = cleanInput(testInput);
+const testHash = findSimilarHashes(testArr);
+const overlapLetters = findSameChars(testHash);
+console.log(overlapLetters);
+*/
+
+/* Part 2 */
+const secondHash = findSimilarHashes(inputArr);
+const overlapLetters = findSameChars(secondHash);
+console.log(overlapLetters.join(''));
+
+function findSimilarHashes(hashArr) {
+    let matchObj = { firstValue: -1, secondValue: -1 };
+    for (let i = 0; i < hashArr.length; i++) {
+        console.log(i);
+        const mainHash = hashArr[i];
+        for (let j = i; j < hashArr.length; j++) {
+            if (compareStrings(mainHash, hashArr[j]) === mainHash.length - 1) {
+                console.log('we got one!', mainHash, hashArr[j]);
+                matchObj.firstValue = mainHash;
+                matchObj.secondValue = hashArr[j];
+                break;
+            } else {
+                console.log(mainHash, hashArr[j]);
+            }
+        }
+        if (matchObj.firstValue !== -1) {
+            break;
+        }
+    }
+    return matchObj;
+}
+
+function compareStrings(first, second) {
+    const firstChars = first.split('');
+    const secondChars = second.split('');
+    let matchingChars = 0;
+    if (firstChars.length !== secondChars.length) {
+        return -1;
+    }
+    firstChars.forEach((char, idx) => {
+        if (secondChars[idx] === char) {
+            matchingChars += 1;
+        }
+    });
+    return matchingChars;
+}
+
+function findSameChars(matchObj) {
+    let matchedLetters = [];
+    console.log(matchObj)
+    matchObj.firstValue.split('').forEach((char, idx) => {
+        if (char === matchObj.secondValue[idx]) {
+            matchedLetters.push(char);
+        }
+    });
+    return matchedLetters;
+}
+
 
 function cleanInput(text) {
     return text.split('\n').filter(i => i !== '');
 } 
-/*
-abcdef contains no letters that appear exactly two or three times.
-bababc contains two a and three b, so it counts for both.
-abbcde contains two b, but no letter appears exactly three times.
-abcccd contains three c, but no letter appears exactly two times.
-aabcdd contains two a and two d, but it only counts once.
-abcdee contains two e.
-ababab
-*/
