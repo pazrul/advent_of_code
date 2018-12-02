@@ -4,7 +4,7 @@ A Repo to track days for Advent of Code
 
 
 ### Javascript
-* Change Dir: `cd /2018/js/day_*`
+* Change Dir: `cd /2018/js/`
 * Run It: `node day_*.js`
 
 ### Rust
