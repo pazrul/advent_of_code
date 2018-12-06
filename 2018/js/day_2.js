@@ -1,6 +1,21 @@
-function run() {
-    const fileLoader = require('./file-loader.js');
-    const inputRaw = fileLoader.openFile('../day_2_input.txt');
+function test() {
+    const assert = require('assert');
+
+    const testInput1 = 'abcdef\nbababc\nabbcde\nabcccd\naabcdd\nabcdee\nababab\n';
+    const test1Arr = cleanInput(testInput1);
+    const matchesResult = findMatches(test1Arr);
+    const checksumResult = makeChecksum(matchesResult);
+    assert.strictEqual(checksumResult, 12);
+
+
+    const testInput2 = 'abcde\nfghij\nklmno\npqrst\nfguij\naxcye\nwvxyz';
+    const test2Arr = cleanInput(testInput2);
+    const testHash = findSimilarHashes(test2Arr);
+    const overlapLetters = findSameChars(testHash);
+    assert.strictEqual(overlapLetters.join(''), 'fgij');
+}
+
+function run(inputRaw) {
     const inputArr = cleanInput(inputRaw);
 
     const inputMatches = findMatches(inputArr);
@@ -11,28 +26,6 @@ function run() {
     const overlapLetters = findSameChars(secondHash);
     console.log(`Answer to Part 2: ${overlapLetters.join('')}`);
 }
-
-function test() {
-    const assert = require('assert');
-    try {
-        const testInput1 = 'abcdef\nbababc\nabbcde\nabcccd\naabcdd\nabcdee\nababab\n';
-        const test1Arr = cleanInput(testInput1);
-        const matchesResult = findMatches(test1Arr);
-        const checksumResult = makeChecksum(matchesResult);
-        assert.strictEqual(checksumResult, 12);
-
-
-        const testInput2 = 'abcde\nfghij\nklmno\npqrst\nfguij\naxcye\nwvxyz';
-        const test2Arr = cleanInput(testInput2);
-        const testHash = findSimilarHashes(test2Arr);
-        const overlapLetters = findSameChars(testHash);
-        assert.strictEqual(overlapLetters.join(''), 'fgij');
-        console.log('All Tests Passed');
-    } catch (e) {
-        console.log(e);
-    }
-}
-
 
 function findMatches(inputArr) {
     let result = {
@@ -117,4 +110,4 @@ function cleanInput(text) {
 module.exports = {
     run,
     test
-}
+};

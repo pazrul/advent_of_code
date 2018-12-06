@@ -3,10 +3,20 @@ const isTest = Boolean(process.env.IS_TEST);
 const dayModule = getModule(targetArg)
 
 if (isTest) {
-    dayModule.test();
+    try {
+        dayModule.test();
+        console.log('All Tests Passed');
+    } catch (e) {
+        console.log(e);
+    }
 } else {
-    dayModule.run();
+    const fileLoader = require('./file-loader.js');
+    const inputRaw = fileLoader.openFile(`../${targetArg}_input.txt`);
+    console.time(targetArg);
+    dayModule.run(inputRaw);
+    console.timeEnd(targetArg);
 }
+
 
 function getModule(fileName) {
     fileName = fileName.endsWith('.js') ? `./${fileName}` : `./${fileName}.js`;
